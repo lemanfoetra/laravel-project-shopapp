@@ -16,3 +16,11 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::post('register', 'API\UserController@register');
+Route::post('login', 'API\UserController@login');
+Route::get('book', 'API\BookController@book');
+
+Route::get('bookall', 'API\BookController@bookAuth')->middleware('jwt.verify');
+Route::get('user', 'API\UserController@getAuthenticatedUser')->middleware('jwt.verify');
