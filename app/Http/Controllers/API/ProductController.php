@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use File;
+
 
 class ProductController extends Controller
 {
@@ -58,7 +60,7 @@ class ProductController extends Controller
         $data['users_id']   = Auth::user()->id;
         $data['name']       = $request->name;
         $data['price']      = $request->price;
-        $data['description']= $request->description;
+        $data['description'] = $request->description;
         $data['updated_at'] = date('Y-m-d H:i:s');
 
         // saving file
@@ -73,7 +75,7 @@ class ProductController extends Controller
         }
 
         $result = DB::table('products')->where('id', $product)->update($data);
-        if($result > 0){
+        if ($result > 0) {
             return $this->responseSuccess('Update Product Berhasil');
         }
         return $this->responseFail('Update Gagal');
@@ -83,8 +85,20 @@ class ProductController extends Controller
 
 
 
+    public function delete(ProductModel $product)
+    {
+        // deleting image file
+        $result = File::delete(str_replace(url('/').'/', '', $product->img_url));
 
-    
+        $result = DB::table('products')->where('id', $product->id)->delete();
+        if ($result > 0) {
+            return $this->responseSuccess('Delete Product Berhasil', $product);
+        }
+        return $this->responseFail('Delete Gagal');
+    }
+
+
+
 
     protected function responseSuccess($message = 'Sukses', $data = '', $kode = 200)
     {
