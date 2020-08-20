@@ -24,3 +24,9 @@ Route::get('book', 'API\BookController@book');
 
 Route::get('bookall', 'API\BookController@bookAuth')->middleware('jwt.verify');
 Route::get('user', 'API\UserController@getAuthenticatedUser')->middleware('jwt.verify');
+
+
+Route::prefix('product')->group(function () {
+    Route::get('/', 'API\ProductController@index')->name('product.index');
+    Route::post('/add', 'API\ProductController@add')->name('product.add');
+});
