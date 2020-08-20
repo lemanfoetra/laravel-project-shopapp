@@ -29,4 +29,5 @@ Route::get('user', 'API\UserController@getAuthenticatedUser')->middleware('jwt.v
 Route::prefix('product')->group(function () {
     Route::get('/', 'API\ProductController@index')->name('product.index');
     Route::post('/add', 'API\ProductController@add')->name('product.add');
+    Route::post('/edit/{product}', 'API\ProductController@edit')->name('product.edit');
 });
