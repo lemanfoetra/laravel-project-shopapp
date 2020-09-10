@@ -23,6 +23,9 @@ class ProductController extends Controller
     }
 
 
+    /**
+     * get all product
+     */
     public function index()
     {
         return AllProductResources::collection(ProductModel::paginate(10));
@@ -30,6 +33,25 @@ class ProductController extends Controller
 
 
 
+    /**
+     * Get singgle prduct
+     */
+    public function product($id)
+    {
+        $product = DB::table('products')
+            ->where('id', $id)
+            ->get();
+        if (count($product) > 0) {
+            return $this->responseSuccess('success', $product, 200);
+        }
+        return $this->responseFail('product not found.');
+    }
+
+
+
+    /**
+     * Add product 
+     */
     public function add(AddProductRequest $request)
     {
 
@@ -54,7 +76,9 @@ class ProductController extends Controller
 
 
 
-
+    /**
+     * Edit product
+     */
     public function edit(EditProductRequest $request, $product)
     {
         $data['users_id']   = Auth::user()->id;
@@ -84,18 +108,36 @@ class ProductController extends Controller
 
 
 
-
+    /**
+     * Delete Product
+     */
     public function delete(ProductModel $product)
     {
         // deleting image file
-        $result = File::delete(str_replace(url('/').'/', '', $product->img_url));
+        File::delete(str_replace(url('/') . '/', '', $product->img_url));
 
-        $result = DB::table('products')->where('id', $product->id)->delete();
+        $result = DB::table('products')
+            ->where('id', $product->id)
+            ->where('user_id', Auth::user()->id)
+            ->delete();
+
         if ($result > 0) {
             return $this->responseSuccess('Delete Product Berhasil', $product);
         }
         return $this->responseFail('Delete Gagal');
     }
+
+
+
+    /**
+     * Get my product
+     */
+    public function myProduct()
+    {
+        $product = DB::table('products')->where('users_id', Auth::user()->id)->paginate(10);
+        return $this->responseSuccess('success', $product, 200);
+    }
+
 
 
 
