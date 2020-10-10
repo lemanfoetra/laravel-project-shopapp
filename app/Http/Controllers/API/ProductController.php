@@ -118,7 +118,7 @@ class ProductController extends Controller
 
         $result = DB::table('products')
             ->where('id', $product->id)
-            ->where('user_id', Auth::user()->id)
+            ->where('users_id', Auth::user()->id)
             ->delete();
 
         if ($result > 0) {

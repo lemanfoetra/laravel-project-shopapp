@@ -25,9 +25,21 @@ Route::get('users', 'API\UserController@getAuthenticatedUser')->middleware('jwt.
 
 Route::prefix('product')->group(function () {
     Route::get('/', 'API\ProductController@index')->name('product.index');
-    Route::get('/get/{id}', 'API\ProductController@product')->name('product.product');
+    Route::get('/get/{id_product}', 'API\ProductController@product')->name('product.product');
     Route::get('/get', 'API\ProductController@myProduct')->name('product.myProduct');
     Route::post('/add', 'API\ProductController@add')->name('product.add');
     Route::post('/edit/{product}', 'API\ProductController@edit')->name('product.edit');
     Route::delete('/{product}', 'API\ProductController@delete')->name('product.delete');
+});
+
+
+
+Route::prefix('orders')->group(function () {
+    Route::get('/', 'API\OrdersController@index');
+    Route::get('/paid', 'API\OrdersController@ordersPaid');
+    Route::get('/proses', 'API\OrdersController@paid');
+    Route::get('/{id_orders}', 'API\OrdersController@orders');
+    Route::post('/', 'API\OrdersController@insert');
+    Route::delete('/{id_orders}', 'API\OrdersController@remove');
+    Route::delete('/unlist/{id_product}', 'API\OrdersController@removeProduct');
 });
