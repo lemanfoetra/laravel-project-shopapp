@@ -51,6 +51,35 @@ class OrdersController extends Controller
 
 
 
+    /**
+     * Get orders by tanggal order paid
+     */
+    public function ordersPaidWhere($date)
+    {
+        $orders = DB::table('orders')
+            ->where('orders.users_id', Auth::user()->id)
+            ->where('status', 'paid')
+            ->whereRaw("DATE_FORMAT(updated_at, '%Y-%m-%d') BETWEEN ? AND ? ", [$date, $date])
+            ->orderBy('created_at', 'desc')->get();
+        return $this->responseSuccess('get your orders success', $orders);
+    }
+
+
+    /**
+     * Get orders paid (group by tanggal)
+     * @return String date (YYYY-MM-DD)
+     */
+    public function ordersPaidAt()
+    {
+        $orders = DB::table('orders')
+            ->select(DB::raw("distinct DATE_FORMAT(updated_at, '%Y-%m-%d') as DATE"))
+            ->where('orders.users_id', Auth::user()->id)
+            ->where('status', 'paid')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+        return $this->responseSuccess('get your orders success', $orders);
+    }
+
 
     /**
      * Product order list
@@ -102,13 +131,12 @@ class OrdersController extends Controller
     public function paid()
     {
         $status = DB::table('orders')
-                    ->where('users_id', Auth::user()->id)
-                    ->where('status', 'order')
-                    ->update(['status' => 'paid']);
+            ->where('users_id', Auth::user()->id)
+            ->where('status', 'order')
+            ->update(['status' => 'paid']);
         if ($status)
             return $this->responseSuccess('Paid Orders Success');
     }
-
 
 
 

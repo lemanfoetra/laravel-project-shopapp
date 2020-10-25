@@ -37,6 +37,8 @@ Route::prefix('product')->group(function () {
 Route::prefix('orders')->group(function () {
     Route::get('/', 'API\OrdersController@index');
     Route::get('/paid', 'API\OrdersController@ordersPaid');
+    Route::get('/paidat', 'API\OrdersController@ordersPaidAt');
+    Route::get('/paidwhere/{date}', 'API\OrdersController@ordersPaidWhere');
     Route::get('/proses', 'API\OrdersController@paid');
     Route::get('/{id_orders}', 'API\OrdersController@orders');
     Route::post('/', 'API\OrdersController@insert');
